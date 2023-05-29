@@ -29,16 +29,29 @@ bool isPrime( int x )
 }
 */
 
+void print_pretty( char* buf, int len, int step=6, int offset=0) {
+    for ( int i = 0; i < len; i++ )
+    {
+        if ( i > 0 && i % step == 0 ) {
+            printf("|");
+        }
+        int idx = (i + offset) % len;
+        if ( idx < 0 ) idx += len;
+        printf("%c", buf[idx]);
+    }
+    printf("\n");
+}
+
 int main()
 {
     int i;
     int hit;
     char c[] = {'.', '+', '-', '*'};
 
-    const int x = 3;
+    const int x = 1;
     const int x_min = 6 * x - 1;
     const int x_max = 6 * x + 1;
-    const int len = x_max * x_min;
+    const int len = x_max * x_min+1;
 
     //Setup my buffer
     char* buf[] = {
@@ -71,18 +84,35 @@ int main()
             printf("X+1 double => %d\n", i);
         }
 
-        if ( false && i > 0 && i % 6 == 0 ) {
+        /*
+        if ( i > 0 && i % 6 == 0 ) {
             o++;
             buf[0][i+o] = buf[1][i+o] = '|';
         }
+         */
 
         buf[0][i+o+1] = buf[1][i+o+1] = 0;
     }
 
     //Print out my info
-    printf("%s\n", buf[0]);
-    printf("%s\n", buf[1]);
+    printf("X+1 *0");
+    print_pretty(buf[0], len, 6, 0);
+    printf("X+1 *1");
+    print_pretty(buf[0], len, 6, 6*x*x*1);
+    printf("X+1 *2");
+    print_pretty(buf[0], len, 6, 6*x*x*2);
+    printf("X+1 *3");
+    print_pretty(buf[0], len, 6, 6*x*x*3);
+    printf("X+1 *4");
+    print_pretty(buf[0], len, 6, 6*x*x*4);
+    printf("X+1 *5");
+    print_pretty(buf[0], len, 6, 6*x*x*5);
+    printf("X+1 *6");
+    print_pretty(buf[0], len, 6, 6*x*x*6);
+    printf("\n");
+    print_pretty(buf[1], len, 6, 0);//-6*x*x*2);
 
+    return 0;
     //PRint!
     const int start = 6 * x * x;
     for ( i = 0; i < 6 * x - 1; i++ )

@@ -4,12 +4,20 @@ Interesting findings.
 
 Everything repeats at an interval of either
 
+```math
 Length = 
-6^2 * x^2 -1 or
-(6*x - 1) * (6*x + 1)
+6^2 * x^2 or
+(6*x - 1) * (6*x + 1) + 1
+```
 
+```Math
 +-1 will always overlap on the 6x-1 line at: 6*x^2
 +-1 will always overlap on the 6x+1 line at: Length - 6*x^2
+In this way, interactions of 6x+1 are analogous SIN and COS.
+SIN can become COS by shifting it by 90degrees or 6*x^2*2, but this works by 120 degrees
+  From X-1 to X+1, Subtract 6*x^2*2
+  From X+1 to X-1, Add 6*x^2*2
+```
 
 From the +-1 overlap, the center of expanding +- interactions is always 6*x interval
 
@@ -19,3 +27,16 @@ There is a point where The +.X.- will be touching another plus. The feature is a
 The gap between -+ and then next +- is always 6*(x-1)+4 or 6x-2
 
 The 6x+1 and -1 always have an interaction of .+ and .- as the start and the opposite at the end - and +. The gap between these is x.
+
+### There exists 6 rotations
+
+```
+Rotations are only at the value of: 
+6*x^2 *1
+6*x^2 *2 # shift form 6x-1 to 6x+1
+6*x^2 *3
+6*x^2 *4
+6*x^2 *5
+6*x^2 *6
+
+```
