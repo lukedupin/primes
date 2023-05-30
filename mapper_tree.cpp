@@ -58,7 +58,7 @@ int main( int argc, char** argv)
     const int x = atoi(argv[1]);
     const int x_min = 6 * x - 1;
     const int x_max = 6 * x + 1;
-    const int len = x_max * x_min+1;
+    const int len = 6*6*x*x;//(x_max * x_min) * 2;
 
     //Setup my buffer
     char* buf[] = {
@@ -119,23 +119,33 @@ int main( int argc, char** argv)
     //Calculate the pattern
     memset( buf[2], '.', len );
     for ( int i = 0; i < x*2; i++ ) {
+        //Left side
         buf[2][6*x*i + 3*x-i-1] = '+';
         buf[2][6*x*i + 3*x+i] = '-';
+
+        //Right side
+        buf[2][len - 6*x*i - 3*x-i-1] = '-';
+        buf[2][len - 6*x*i - 3*x+i] = '+';
     }
 
     //From the start, there exists a special pattern
-    buf[2][18*x*x] = '*';
-    buf[2][18*x*x + (6*x - 1)] = '+';
-    buf[2][18*x*x - (6*x - 1)] = '+';
+    const int star = 18*x*x;
+    buf[2][star] = '*';
+    buf[2][star + (6*x - 1)] = '+';
+    buf[2][star - (6*x - 1)] = '+';
 
     //This is the reversed -+ pattern that is optional
+    for ( int i = 1; i <= x; i++ ) {
+        //Left side
+        buf[2][star - 6*x*i+i] = '+';
+        buf[2][star - 6*x*i-i] = '-';
 
+        buf[2][star + 6*x*i+i] = '-';
+        buf[2][star + 6*x*i-i] = '+';
+    }
 
-    printf("X+1 4 -- ");
     print_pretty(buf[0], len, 6, 6*x*x*4);
-    printf("Calc     ");
     print_pretty(buf[2], len, 6, 0);//-6*x*x*2);
-    printf("Check    ");
     const int offset = 6*x*x*4;
     for ( int i = 0; i < len; i++ ) {
         if ( i > 0 && i % 6 == 0 ) printf("|");
