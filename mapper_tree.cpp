@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 /*
  
@@ -42,24 +44,33 @@ void print_pretty( char* buf, int len, int step=6, int offset=0) {
     printf("\n");
 }
 
-int main()
+int main( int argc, char** argv)
 {
+    if ( argc < 2 ) {
+        printf("Usage: %s <x>\n", argv[0]);
+        return 1;
+    }
+
     int i;
     int hit;
     char c[] = {'.', '+', '-', '*'};
 
-    const int x = 1;
+    const int x = atoi(argv[1]);
     const int x_min = 6 * x - 1;
     const int x_max = 6 * x + 1;
     const int len = x_max * x_min+1;
 
     //Setup my buffer
     char* buf[] = {
-        new char[len + 1+100],
-        new char[len + 1+100],
+        new char[len + 1],
+        new char[len + 1],
+        new char[len + 1],
     };
-    buf[0][len] = buf[1][len] = 0;
+    memset( buf[0], '0', len+1 );
+    memset( buf[1], '0', len+1 );
+    memset( buf[2], '0', len+1 );
 
+    printf("X = %d\n", x);
     printf("Len %d\n", len); // Awlays equal to 6^2 * x^2 - 1
 
     //Check my map
@@ -95,22 +106,42 @@ int main()
     }
 
     //Print out my info
-    printf("X+1 *0");
+    printf("X+1 0 -- ");
     print_pretty(buf[0], len, 6, 0);
-    printf("X+1 *1");
-    print_pretty(buf[0], len, 6, 6*x*x*1);
-    printf("X+1 *2");
+    printf("X+1 2 -- ");
     print_pretty(buf[0], len, 6, 6*x*x*2);
-    printf("X+1 *3");
-    print_pretty(buf[0], len, 6, 6*x*x*3);
-    printf("X+1 *4");
+    printf("X+1 4 -- ");
     print_pretty(buf[0], len, 6, 6*x*x*4);
-    printf("X+1 *5");
-    print_pretty(buf[0], len, 6, 6*x*x*5);
-    printf("X+1 *6");
-    print_pretty(buf[0], len, 6, 6*x*x*6);
-    printf("\n");
+    printf("Negative ");
     print_pretty(buf[1], len, 6, 0);//-6*x*x*2);
+    printf("\n");
+
+    //Calculate the pattern
+    memset( buf[2], '.', len );
+    for ( int i = 0; i < x*2; i++ ) {
+        buf[2][6*x*i + 3*x-i-1] = '+';
+        buf[2][6*x*i + 3*x+i] = '-';
+    }
+
+    //From the start, there exists a special pattern
+    buf[2][18*x*x] = '*';
+    buf[2][18*x*x + (6*x - 1)] = '+';
+    buf[2][18*x*x - (6*x - 1)] = '+';
+
+    //This is the reversed -+ pattern that is optional
+
+
+    printf("X+1 4 -- ");
+    print_pretty(buf[0], len, 6, 6*x*x*4);
+    printf("Calc     ");
+    print_pretty(buf[2], len, 6, 0);//-6*x*x*2);
+    printf("Check    ");
+    const int offset = 6*x*x*4;
+    for ( int i = 0; i < len; i++ ) {
+        if ( i > 0 && i % 6 == 0 ) printf("|");
+        printf("%c", (buf[0][(i+offset) % len] == buf[2][i])? ' ': 'X');
+    }
+    printf("\n");
 
     return 0;
     //PRint!
