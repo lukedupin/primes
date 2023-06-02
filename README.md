@@ -6,8 +6,13 @@ Everything repeats at an interval of either
 
 ```math
 Length = 
-6^2 * x^2 or
-(6*x - 1) * (6*x + 1) + 1
+6^2 * x^2 - 1 or
+(6*x - 1) * (6*x + 1)
+
+Note that symetry is achieved by adding 1 to the length
+```
+
+```math
 ```
 
 ```Math
@@ -50,8 +55,18 @@ Everything works in pairs, so its not centered.
 The value to the first + is (6*x*iter + 3*x - iter - 1)
 The value to the first - is (6*x*iter + 3*x + iter + 0)
 
-The * will always exist at 6^2*x^2/2 or 18*x^2
+The * will always exist at 6^2*x^2/2 - 1 or 18*x^2 - 1
 The * beings its own pattern. It's always surround by +'s
 the +'s are 6*x-1 and -(6*x-1)
 After the first set of +'s, a pattern of -+ exists at the rate of...
+```
+
+### Simplified centered operations
+```
+Rotate the array to be on center
+Star = 18*x^2 - 1
+Everything movies out from the Start "Centere"
+Star +- 6*x-1 = +
+Star +- 6*x+1 = -
+Rotate the array back to the desired position
 ```

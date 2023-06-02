@@ -7,13 +7,13 @@
    Everything centers around x * 6. +, - are on either side for first step after a *. * is the center, no hit is the other side.
    The pattern steps are always the same, I'm guessing there is 6^2 step types
 
-   This will print the mapper format, but in a tree structure around the x * 6 steps logic
+   This will prlong the mapper format, but in a tree structure around the x * 6 steps logic
 */
 
 /*
-bool isPrime( int x )
+bool isPrime( long x )
 {
-  for ( int i = 6; i < x; i += 6 )
+  for ( long i = 6; i < x; i += 6 )
   {
     if ( (x % (i - 1)) == 0 )
     {
@@ -31,13 +31,13 @@ bool isPrime( int x )
 }
 */
 
-void print_pretty( char* buf, int len, int step=6, int offset=0) {
-    for ( int i = 0; i < len; i++ )
+void print_pretty( char* buf, long len, long step=6, long offset=0) {
+    for ( long i = 0; i < len; i++ )
     {
         if ( i > 0 && i % step == 0 ) {
             printf("|");
         }
-        int idx = (i + offset) % len;
+        long idx = (i + offset) % len;
         if ( idx < 0 ) idx += len;
         printf("%c", buf[idx]);
     }
@@ -51,14 +51,14 @@ int main( int argc, char** argv)
         return 1;
     }
 
-    int i;
-    int hit;
+    long i;
+    long hit;
     char c[] = {'.', '+', '-', '*'};
 
-    const int x = atoi(argv[1]);
-    const int x_min = 6 * x - 1;
-    const int x_max = 6 * x + 1;
-    const int len = 6*6*x*x;//(x_max * x_min) * 2;
+    const long x = atoi(argv[1]);
+    const long x_min = 6 * x - 1;
+    const long x_max = 6 * x + 1;
+    const long len = (x_max * x_min);
 
     //Setup my buffer
     char* buf[] = {
@@ -74,7 +74,7 @@ int main( int argc, char** argv)
     printf("Len %d\n", len); // Awlays equal to 6^2 * x^2 - 1
 
     //Check my map
-    int o = 0;
+    long o = 0;
     for ( i = 0; i < len; i++ )
     {
         hit = 0;
@@ -105,7 +105,7 @@ int main( int argc, char** argv)
         buf[0][i+o+1] = buf[1][i+o+1] = 0;
     }
 
-    //Print out my info
+    //Prlong out my info
     printf("X+1 0 -- ");
     print_pretty(buf[0], len, 6, 0);
     printf("X+1 2 -- ");
@@ -116,9 +116,10 @@ int main( int argc, char** argv)
     print_pretty(buf[1], len, 6, 0);//-6*x*x*2);
     printf("\n");
 
+    /* Rather complext alogrithm
     //Calculate the pattern
     memset( buf[2], '.', len );
-    for ( int i = 0; i < x*2; i++ ) {
+    for ( long i = 0; i < x*2; i++ ) {
         //Left side
         buf[2][6*x*i + 3*x-i-1] = '+';
         buf[2][6*x*i + 3*x+i] = '-';
@@ -129,13 +130,13 @@ int main( int argc, char** argv)
     }
 
     //From the start, there exists a special pattern
-    const int star = 18*x*x;
+    const long star = 18*x*x - 1;
     buf[2][star] = '*';
     buf[2][star + (6*x - 1)] = '+';
     buf[2][star - (6*x - 1)] = '+';
 
     //This is the reversed -+ pattern that is optional
-    for ( int i = 1; i <= x; i++ ) {
+    for ( long i = 1; i <= x; i++ ) {
         //Left side
         buf[2][star - 6*x*i+i] = '+';
         buf[2][star - 6*x*i-i] = '-';
@@ -143,27 +144,60 @@ int main( int argc, char** argv)
         buf[2][star + 6*x*i+i] = '-';
         buf[2][star + 6*x*i-i] = '+';
     }
+     */
+
+    //Simple algorithm
+    //From the start, there exists a special pattern
+    memset( buf[2], '.', len );
+    const long star = 18*x*x - 1;
+    buf[2][star] = '*'; //This is the center of everything
+
+    //Since everythign flows from the * we just calculate teh sin/cos
+    hit = 1;
+    for ( long i = 1; hit != 0; i++ ) {
+        hit = 0;
+        hit |= (star >= x_max*i)? 1: 0;
+        hit |= (star >= x_min*i)? 2: 0;
+
+        //Waves out...
+        if ( (hit | 1) != 0 ) {
+            buf[2][star - x_max*i] = '-';
+            buf[2][star + x_max*i] = '-';
+        }
+        if ( (hit | 2) != 0 ) {
+            buf[2][star - x_min*i] = '+';
+            buf[2][star + x_min*i] = '+';
+        }
+    }
 
     print_pretty(buf[0], len, 6, 6*x*x*4);
     print_pretty(buf[2], len, 6, 0);//-6*x*x*2);
-    const int offset = 6*x*x*4;
-    for ( int i = 0; i < len; i++ ) {
+
+    const long offset = 6*x*x*4;
+    for ( long i = 0; i < len; i++ ) {
         if ( i > 0 && i % 6 == 0 ) printf("|");
-        printf("%c", (buf[0][(i+offset) % len] == buf[2][i])? ' ': 'X');
+        const auto check = (buf[0][(i+offset) % len] == buf[2][i])? ' ': 'X';
+        printf("%c", check);
+        /*
+        while ( check == 'X' ) {
+            printf("\n%c != %c\n", buf[0][(i+offset) % len], buf[2][i]);
+            while(1);
+        }
+         */
     }
     printf("\n");
 
     return 0;
     //PRint!
-    const int start = 6 * x * x;
+    const long start = 6 * x * x;
     for ( i = 0; i < 6 * x - 1; i++ )
     {
-        const int i2 = i * x;
-        for ( int j = 3; j >= 1; j--) {
+        const long i2 = i * x;
+        for ( long j = 3; j >= 1; j--) {
             printf("%c", buf[0][i2*6 + start - j]);
         }
         printf("%c", buf[0][i2*6 + start]);
-        for ( int j = 1; j <= 2; j++) {
+        for ( long j = 1; j <= 2; j++) {
             printf("%c", buf[0][(i2 * 6 + start + j) % len]);
         }
         printf("\n");
